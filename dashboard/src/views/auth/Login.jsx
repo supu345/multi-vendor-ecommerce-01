@@ -3,17 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineGooglePlus, AiOutlineGithub } from "react-icons/ai";
 import { FiFacebook } from "react-icons/fi";
 import { CiTwitter } from "react-icons/ci";
-//import { useDispatch, useSelector } from "react-redux";
-//import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import { PropagateLoader } from "react-spinners";
-//import { overrideStyle } from "../../utils/utils";
-//import { messageClear, seller_login } from "../../store/Reducers/authReducer";
+import { overrideStyle } from "../../utils/utils";
+import { messageClear, seller_login } from "../../store/Reducers/authReducer";
 const Login = () => {
   const navigate = useNavigate();
-  //const dispatch = useDispatch();
-  // const { loader, errorMessage, successMessage } = useSelector(
-  //   (state) => state.auth
-  // );
+  const dispatch = useDispatch();
+  const { loader, errorMessage, successMessage } = useSelector(
+    (state) => state.auth
+  );
   const [state, setSatate] = useState({
     email: "",
     password: "",
@@ -24,21 +24,21 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
-  // const submit = (e) => {
-  //   e.preventDefault();
-  //   dispatch(seller_login(state));
-  // };
-  // useEffect(() => {
-  //   if (successMessage) {
-  //     toast.success(successMessage);
-  //     dispatch(messageClear());
-  //     navigate("/");
-  //   }
-  //   if (errorMessage) {
-  //     toast.error(errorMessage);
-  //     dispatch(messageClear());
-  //   }
-  // }, [successMessage, errorMessage]);
+  const submit = (e) => {
+    e.preventDefault();
+    dispatch(seller_login(state));
+  };
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      navigate("/");
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage]);
   return (
     <div className="min-w-screen min-h-screen bg-[#161d31] flex justify-center items-center">
       <div className="w-[350px] text-[#d0d2d6] p-2">
@@ -47,7 +47,7 @@ const Login = () => {
           <p className="text-sm mb-3">
             Please signin to your account and start your bussiness
           </p>
-          <form>
+          <form onSubmit={submit}>
             <div className="flex flex-col w-full gap-1 mb-3">
               <label htmlFor="email">Email</label>
               <input
@@ -75,15 +75,14 @@ const Login = () => {
               />
             </div>
             <button
-              //disabled={loader ? true : false}
+              disabled={loader ? true : false}
               className="bg-blue-500 w-full hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
             >
-              {/* {loader ? (
+              {loader ? (
                 <PropagateLoader color="#fff" cssOverride={overrideStyle} />
               ) : (
                 "Login"
-              )} */}
-              Login
+              )}
             </button>
             <div className="flex items-center mb-3 gap-3 justify-center">
               <p>

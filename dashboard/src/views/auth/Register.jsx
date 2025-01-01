@@ -5,19 +5,19 @@ import { AiOutlineGooglePlus, AiOutlineGithub } from "react-icons/ai";
 import { FiFacebook } from "react-icons/fi";
 import { CiTwitter } from "react-icons/ci";
 import { PropagateLoader } from "react-spinners";
-// import { useDispatch, useSelector } from "react-redux";
-// import { overrideStyle } from "../../utils/utils";
-// import {
-//   messageClear,
-//   seller_register,
-// } from "../../store/Reducers/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { overrideStyle } from "../../utils/utils";
+import {
+  messageClear,
+  seller_register,
+} from "../../store/Reducers/authReducer";
 
 const Register = () => {
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
-  // const { loader, errorMessage, successMessage } = useSelector(
-  //   (state) => state.auth
-  // );
+  const dispatch = useDispatch();
+  const { loader, errorMessage, successMessage } = useSelector(
+    (state) => state.auth
+  );
   const [state, setSatate] = useState({
     name: "",
     email: "",
@@ -31,20 +31,19 @@ const Register = () => {
   };
   const submit = (e) => {
     e.preventDefault();
-    // dispatch(seller_register(state));
-    console.log(state);
+    dispatch(seller_register(state));
   };
-  // useEffect(() => {
-  //   if (successMessage) {
-  //     toast.success(successMessage);
-  //     dispatch(messageClear());
-  //     navigate("/");
-  //   }
-  //   if (errorMessage) {
-  //     toast.error(errorMessage);
-  //     dispatch(messageClear());
-  //   }
-  // }, [successMessage, errorMessage]);
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      navigate("/");
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage]);
   return (
     <div className="min-w-screen min-h-screen bg-[#161d31] flex justify-center items-center">
       <div className="w-[350px] text-[#d0d2d6] p-2">
@@ -84,7 +83,7 @@ const Register = () => {
               <label htmlFor="password">Password</label>
               <input
                 onChange={inputHandle}
-                value={state.password}
+                value={state.passwprd}
                 className="px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md text-[#d0d2d6] focus:border-indigo-500 overflow-hidden"
                 type="password"
                 name="password"
@@ -106,15 +105,14 @@ const Register = () => {
               </label>
             </div>
             <button
-              //  disabled={loader ? true : false}
+              disabled={loader ? true : false}
               className="bg-blue-500 w-full hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
             >
-              {/* {loader ? (
+              {loader ? (
                 <PropagateLoader color="#fff" cssOverride={overrideStyle} />
               ) : (
                 "Signup"
-              )} */}
-              Signup
+              )}
             </button>
             <div className="flex items-center mb-3 gap-3 justify-center">
               <p>
