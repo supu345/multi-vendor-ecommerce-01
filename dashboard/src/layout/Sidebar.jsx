@@ -3,15 +3,18 @@ import logo from "../assets/logo2.png";
 import { getNavs } from "../navigation/index";
 import { BiLogInCircle } from "react-icons/bi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { useSelector, useDispatch } from "react-redux";
 const Sidebar = ({ showSidebar, setShowSidebar }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [allNav, setAllNav] = useState([]);
+  const { role } = useSelector((state) => state.auth);
   const { pathname } = useLocation();
   useEffect(() => {
-    const navs = getNavs("seller");
+    const navs = getNavs(role);
 
     setAllNav(navs);
-  }, []);
+  }, [role]);
 
   return (
     <div>
