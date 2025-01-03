@@ -87,7 +87,7 @@ const Headers = () => {
               <div className="flex justify-between items-center">
                 <Link to="/">
                   <img
-                    src="http://localhost:5174/images/logo2.png"
+                    src="http://localhost:5173/images/logo2.png"
                     alt="logo"
                     className="w-[130px] h-[130px]"
                   />
@@ -217,7 +217,7 @@ const Headers = () => {
               <div className="flex justify-star items-center gap-10">
                 <div className="flex group cursor-pointer text-slate-800 text-sm justify-center items-center gap-1 relative after:h-[18px] after:w-[1px] after:bg-[#afafaf] after:-right-[16px] after:absolute">
                   <img
-                    src="http://localhost:5174/images/language.png"
+                    src="http://localhost:5173/images/language.png"
                     alt="logo"
                   />
                   <span>
@@ -334,7 +334,7 @@ const Headers = () => {
               <div className="bg-white relative">
                 <div
                   onClick={() => setCategoryShow(!categoryShow)}
-                  className="h-[50px] bg-violet-400 text-white flex justify-center md-lg:justify-between md-lg:px-6 items-center gap-3 font-bold text-md cursor-pointer"
+                  className="h-[50px] bg-green-600 text-white flex justify-center md-lg:justify-between md-lg:px-6 items-center gap-3 font-bold text-md cursor-pointer"
                 >
                   <div className="flex justify-center items-center gap-3">
                     <span>
@@ -405,7 +405,7 @@ const Headers = () => {
                     />
                     <button
                       // onClick={search}
-                      className="bg-violet-400 right-0 absolute px-8 h-full font-semibold uppercase text-white"
+                      className="bg-green-600 right-0 absolute px-8 h-full font-semibold uppercase text-white"
                     >
                       Search
                     </button>
