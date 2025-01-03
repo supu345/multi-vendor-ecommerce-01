@@ -30,6 +30,10 @@ app.use(cookieParser());
 
 app.use("/api", require("./routes/authRoutes"));
 
+//dashboard
+app.use("/api", require("./routes/dashboard/categoryRoutes"));
+app.use("/api", require("./routes/dashboard/productRoutes"));
+
 const port = process.env.PORT || 5030;
 dbConnect();
 app.listen(port, () => console.log(`Server is running on port ${port}!`));

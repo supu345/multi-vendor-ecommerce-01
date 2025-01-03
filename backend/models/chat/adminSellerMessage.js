@@ -23,7 +23,7 @@ const adminSellerMessageSchema = new Schema(
       default: "unseen",
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = model("seller_admin_messages", adminSellerMessageSchema);

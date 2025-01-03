@@ -103,5 +103,91 @@ class authControllers {
       responseReturn(res, 500, { error: error.message });
     }
   };
+
+  profile_image_upload = async (req, res) => {
+    const { id } = req;
+    const form = new formidable.IncomingForm();
+
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        console.error("Formidable parse error:", err);
+        return res.status(500).json({ error: "File parsing failed" });
+      }
+
+      const file = Array.isArray(files.file) ? files.file[0] : files.file;
+
+      if (!file || !file.filepath) {
+        console.error("Image file is missing or invalid");
+        return res.status(400).json({ error: "Image file is required" });
+      }
+
+      console.log("File received:", file);
+
+      try {
+        // Configure Cloudinary
+        cloudinary.config({
+          cloud_name: process.env.cloud_name,
+          api_key: process.env.api_key,
+          api_secret: process.env.api_secret,
+          secure: true,
+        });
+
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(file.filepath, {
+          folder: "profile",
+        });
+
+        if (!result?.url) {
+          return res.status(500).json({ error: "Image upload failed" });
+        }
+
+        // Update seller profile with image URL
+        await sellerModel.findByIdAndUpdate(id, { image: result.url });
+        const userInfo = await sellerModel.findById(id);
+
+        return res.status(201).json({
+          message: "Image upload successful",
+          userInfo,
+        });
+      } catch (error) {
+        console.error("Cloudinary upload error:", error);
+        return res.status(500).json({ error: error.message });
+      }
+    });
+  };
+  profile_info_add = async (req, res) => {
+    const { division, district, shopName, sub_district } = req.body;
+    const { id } = req;
+
+    try {
+      await sellerModel.findByIdAndUpdate(id, {
+        shopInfo: {
+          shopName,
+          division,
+          district,
+          sub_district,
+        },
+      });
+      const userInfo = await sellerModel.findById(id);
+      responseReturn(res, 201, {
+        message: "Profile info add success",
+        userInfo,
+      });
+    } catch (error) {
+      responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  logout = async (req, res) => {
+    try {
+      res.cookie("accessToken", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      });
+      responseReturn(res, 200, { message: "logout success" });
+    } catch (error) {
+      responseReturn(res, 500, { error: error.message });
+    }
+  };
 }
 module.exports = new authControllers();

@@ -23,7 +23,7 @@ const sellerCustomerSchema = new Schema(
       default: "unseen",
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = model("seller_customer_messages", sellerCustomerSchema);

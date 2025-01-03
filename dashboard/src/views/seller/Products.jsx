@@ -2,26 +2,26 @@ import React, { useState, useEffect } from "react";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { GiKnightBanner } from "react-icons/gi";
-//import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Pagination from "../Pagination";
 import Search from "../components/Search";
-//import { get_products } from "../../store/Reducers/productReducer";
+import { get_products } from "../../store/Reducers/productReducer";
 const Products = () => {
-  // const dispatch = useDispatch();
-  // const { products, totalProduct } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const { products, totalProduct } = useSelector((state) => state.product);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [parPage, setParPage] = useState(5);
 
-  // useEffect(() => {
-  //   const obj = {
-  //     parPage: parseInt(parPage),
-  //     page: parseInt(currentPage),
-  //     searchValue,
-  //   };
-  //   dispatch(get_products(obj));
-  // }, [searchValue, currentPage, parPage]);
+  useEffect(() => {
+    const obj = {
+      parPage: parseInt(parPage),
+      page: parseInt(currentPage),
+      searchValue,
+    };
+    dispatch(get_products(obj));
+  }, [searchValue, currentPage, parPage]);
 
   return (
     <div className="px-2 lg:px-7 pt-5 ">
@@ -65,7 +65,7 @@ const Products = () => {
               </tr>
             </thead>
             <tbody>
-              {[1, 2, 3].map((d, i) => (
+              {products.map((d, i) => (
                 <tr key={i}>
                   <td
                     scope="row"
@@ -79,45 +79,49 @@ const Products = () => {
                   >
                     <img
                       className="w-[45px] h-[45px]"
-                      src="https://images.pexels.com/photos/9143680/pexels-photo-9143680.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                      alt="image"
+                      src={d.images[0]}
+                      alt=""
                     />
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>name</span>
+                    <span>{d?.name?.slice(0, 16)}...</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>category</span>
+                    <span>{d.category}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>brand</span>
+                    <span>{d.brand}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>$200</span>
+                    <span>${d.price}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    5
+                    {d.discount === 0 ? (
+                      <span>no discount</span>
+                    ) : (
+                      <span>${d.discount}%</span>
+                    )}
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>stock</span>
+                    <span>{d.stock}</span>
                   </td>
                   <td
                     scope="row"
@@ -125,7 +129,7 @@ const Products = () => {
                   >
                     <div className="flex justify-start items-center gap-4">
                       <Link
-                        to={`/seller/dashboard/edit-product/123`}
+                        to={`/seller/dashboard/edit-product/${d._id}`}
                         className="p-[6px] bg-yellow-500 rounded hover:shadow-lg hover:shadow-yellow-500/50"
                       >
                         <FaEdit />
@@ -137,7 +141,7 @@ const Products = () => {
                         <FaTrash />
                       </button>
                       <Link
-                        to={`/seller/dashboard/add-banner/123`}
+                        to={`/seller/dashboard/add-banner/${d._id}`}
                         className="p-[6px] bg-cyan-500 rounded hover:shadow-lg hover:shadow-cyan-500/50"
                       >
                         <GiKnightBanner />
@@ -149,16 +153,19 @@ const Products = () => {
             </tbody>
           </table>
         </div>
-
-        <div className="w-full flex justify-end mt-4 bottom-4 right-4">
-          <Pagination
-            pageNumber={currentPage}
-            setPageNumber={setCurrentPage}
-            totalItem={50}
-            parPage={parPage}
-            showItem={4}
-          />
-        </div>
+        {totalProduct <= parPage ? (
+          ""
+        ) : (
+          <div className="w-full flex justify-end mt-4 bottom-4 right-4">
+            <Pagination
+              pageNumber={currentPage}
+              setPageNumber={setCurrentPage}
+              totalItem={50}
+              parPage={parPage}
+              showItem={4}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

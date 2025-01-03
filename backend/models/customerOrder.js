@@ -31,7 +31,7 @@ const customerOrder = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = model("customerOrders", customerOrder);

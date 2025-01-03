@@ -23,9 +23,7 @@ const reviewSchema = new Schema(
       required: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = model("reviews", reviewSchema);

@@ -7,18 +7,18 @@ import { Link } from "react-router-dom";
 import Pagination from "../Pagination";
 import { BsImage } from "react-icons/bs";
 import toast from "react-hot-toast";
-//import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Search from "../components/Search";
-// import {
-//   categoryAdd,
-//   messageClear,
-//   get_category,
-// } from "../../store/Reducers/categoryReducer";
+import {
+  categoryAdd,
+  messageClear,
+  get_category,
+} from "../../store/Reducers/categoryReducer";
 const Category = () => {
-  //   const dispatch = useDispatch();
-  //   const { loader, successMessage, errorMessage, categorys } = useSelector(
-  //     (state) => state.category
-  //   );
+  const dispatch = useDispatch();
+  const { loader, successMessage, errorMessage, categorys } = useSelector(
+    (state) => state.category
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [parPage, setParPage] = useState(5);
@@ -39,35 +39,35 @@ const Category = () => {
       });
     }
   };
-  //   const add_category = (e) => {
-  //     e.preventDefault();
-  //     dispatch(categoryAdd(state));
-  //   };
+  const add_category = (e) => {
+    e.preventDefault();
+    dispatch(categoryAdd(state));
+  };
 
-  //   useEffect(() => {
-  //     if (errorMessage) {
-  //       toast.error(errorMessage);
-  //       dispatch(messageClear());
-  //     }
-  //     if (successMessage) {
-  //       toast.success(successMessage);
-  //       dispatch(messageClear());
-  //       setState({
-  //         name: "",
-  //         image: "",
-  //       });
-  //       setImage("");
-  //     }
-  //   }, [successMessage, errorMessage]);
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      setState({
+        name: "",
+        image: "",
+      });
+      setImage("");
+    }
+  }, [successMessage, errorMessage]);
 
-  //   useEffect(() => {
-  //     const obj = {
-  //       parPage: parseInt(parPage),
-  //       page: parseInt(currentPage),
-  //       searchValue,
-  //     };
-  //     dispatch(get_category(obj));
-  //   }, [searchValue, currentPage, parPage]);
+  useEffect(() => {
+    const obj = {
+      parPage: parseInt(parPage),
+      page: parseInt(currentPage),
+      searchValue,
+    };
+    dispatch(get_category(obj));
+  }, [searchValue, currentPage, parPage]);
   return (
     <div className="px-2 lg:px-7 pt-5">
       <div className="flex lg:hidden justify-between items-center mb-5 p-4 bg-[#283046] rounded-md">
@@ -106,7 +106,7 @@ const Category = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {[1, 2, 3].map((d, i) => (
+                  {categorys.map((d, i) => (
                     <tr key={i}>
                       <td
                         scope="row"
@@ -120,15 +120,15 @@ const Category = () => {
                       >
                         <img
                           className="w-[45px] h-[45px]"
-                          src="https://images.pexels.com/photos/10718632/pexels-photo-10718632.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                          alt="img"
+                          src={d.image}
+                          alt=""
                         />
                       </td>
                       <td
                         scope="row"
                         className="py-1 px-4 font-medium whitespace-nowrap"
                       >
-                        <span>name</span>
+                        <span>{d.name}</span>
                       </td>
                       <td
                         scope="row"
@@ -177,7 +177,7 @@ const Category = () => {
                   <GrClose className="text-[#d0d2d6]" />
                 </div>
               </div>
-              <form>
+              <form onSubmit={add_category}>
                 <div className="flex flex-col w-full gap-1 mb-3">
                   <label htmlFor="name">Category name</label>
                   <input
@@ -220,18 +220,17 @@ const Category = () => {
                 />
                 <div className="mt-4">
                   <button
-                    // disabled={loader ? true : false}
+                    disabled={loader ? true : false}
                     className="bg-blue-500 w-full hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
                   >
-                    Add Category
-                    {/* {loader ? (
+                    {loader ? (
                       <PropagateLoader
                         color="#fff"
                         cssOverride={overrideStyle}
                       />
                     ) : (
                       "Add Category"
-                    )} */}
+                    )}
                   </button>
                 </div>
               </form>

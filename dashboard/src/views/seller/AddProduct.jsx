@@ -6,25 +6,25 @@ import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { PropagateLoader } from "react-spinners";
 import { overrideStyle } from "../../utils/utils";
-//import { get_category } from "../../store/Reducers/categoryReducer";
-//import { add_product, messageClear } from "../../store/Reducers/productReducer";
+import { get_category } from "../../store/Reducers/categoryReducer";
+import { add_product, messageClear } from "../../store/Reducers/productReducer";
 
 const AddProduct = () => {
-  //   const dispatch = useDispatch();
-  //   const { categorys } = useSelector((state) => state.category);
-  //   const { successMessage, errorMessage, loader } = useSelector(
-  //     (state) => state.product
-  //   );
-  //   const { userInfo } = useSelector((state) => state.auth);
-  //   useEffect(() => {
-  //     dispatch(
-  //       get_category({
-  //         searchValue: "",
-  //         parPage: "",
-  //         page: "",
-  //       })
-  //     );
-  //   }, []);
+  const dispatch = useDispatch();
+  const { categorys } = useSelector((state) => state.category);
+  const { successMessage, errorMessage, loader } = useSelector(
+    (state) => state.product
+  );
+  const { userInfo } = useSelector((state) => state.auth);
+  useEffect(() => {
+    dispatch(
+      get_category({
+        searchValue: "",
+        parPage: "",
+        page: "",
+      })
+    );
+  }, []);
   const [state, setState] = useState({
     name: "",
     description: "",
@@ -73,66 +73,66 @@ const AddProduct = () => {
     }
   };
 
-  //   const changeImage = (img, index) => {
-  //     if (img) {
-  //       let tempUrl = imageShow;
-  //       let tempImages = images;
+  const changeImage = (img, index) => {
+    if (img) {
+      let tempUrl = imageShow;
+      let tempImages = images;
 
-  //       tempImages[index] = img;
-  //       tempUrl[index] = { url: URL.createObjectURL(img) };
-  //       setImageShow([...tempUrl]);
-  //       setImages([...tempImages]);
-  //     }
-  //   };
+      tempImages[index] = img;
+      tempUrl[index] = { url: URL.createObjectURL(img) };
+      setImageShow([...tempUrl]);
+      setImages([...tempImages]);
+    }
+  };
 
-  //   const removeImage = (i) => {
-  //     const filterImage = images.filter((img, index) => index !== i);
-  //     const filterImageUrl = imageShow.filter((img, index) => index !== i);
-  //     setImages(filterImage);
-  //     setImageShow(filterImageUrl);
-  //   };
+  const removeImage = (i) => {
+    const filterImage = images.filter((img, index) => index !== i);
+    const filterImageUrl = imageShow.filter((img, index) => index !== i);
+    setImages(filterImage);
+    setImageShow(filterImageUrl);
+  };
 
-  //   useEffect(() => {
-  //     setAllCategory(categorys);
-  //   }, [categorys]);
+  useEffect(() => {
+    setAllCategory(categorys);
+  }, [categorys]);
 
-  //   const add = (e) => {
-  //     e.preventDefault();
-  //     const formData = new FormData();
-  //     formData.append("name", state.name);
-  //     formData.append("description", state.description);
-  //     formData.append("price", state.price);
-  //     formData.append("stock", state.stock);
-  //     formData.append("category", category);
-  //     formData.append("discount", state.discount);
-  //     formData.append("shopName", userInfo?.shopInfo?.shopName);
-  //     formData.append("brand", state.brand);
-  //     for (let i = 0; i < images.length; i++) {
-  //       formData.append("images", images[i]);
-  //     }
-  //     dispatch(add_product(formData));
-  //   };
-  //   useEffect(() => {
-  //     if (errorMessage) {
-  //       toast.error(errorMessage);
-  //       dispatch(messageClear());
-  //     }
-  //     if (successMessage) {
-  //       toast.success(successMessage);
-  //       dispatch(messageClear());
-  //       setState({
-  //         name: "",
-  //         description: "",
-  //         discount: "",
-  //         price: "",
-  //         brand: "",
-  //         stock: "",
-  //       });
-  //       setImageShow([]);
-  //       setImages([]);
-  //       setCategory("");
-  //     }
-  //   }, [successMessage, errorMessage]);
+  const add = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", state.name);
+    formData.append("description", state.description);
+    formData.append("price", state.price);
+    formData.append("stock", state.stock);
+    formData.append("category", category);
+    formData.append("discount", state.discount);
+    formData.append("shopName", userInfo?.shopInfo?.shopName);
+    formData.append("brand", state.brand);
+    for (let i = 0; i < images.length; i++) {
+      formData.append("images", images[i]);
+    }
+    dispatch(add_product(formData));
+  };
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      setState({
+        name: "",
+        description: "",
+        discount: "",
+        price: "",
+        brand: "",
+        stock: "",
+      });
+      setImageShow([]);
+      setImages([]);
+      setCategory("");
+    }
+  }, [successMessage, errorMessage]);
 
   return (
     <div className="px-2 lg:px-7 pt-5 ">
@@ -147,7 +147,7 @@ const AddProduct = () => {
           </Link>
         </div>
         <div>
-          <form>
+          <form onSubmit={add}>
             <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
               <div className="flex flex-col w-full gap-1">
                 <label htmlFor="name">Product name</label>
@@ -320,15 +320,14 @@ const AddProduct = () => {
             </div>
             <div className="flex">
               <button
-                //disabled={loader ? true : false}
+                disabled={loader ? true : false}
                 className="bg-blue-500 w-[190px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
               >
-                Add product
-                {/* {loader ? (
+                {loader ? (
                   <PropagateLoader color="#fff" cssOverride={overrideStyle} />
                 ) : (
                   "Add product"
-                )} */}
+                )}
               </button>
             </div>
           </form>

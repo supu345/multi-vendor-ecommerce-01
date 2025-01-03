@@ -11,7 +11,7 @@ const sellerCustomerSchema = new Schema(
       default: [],
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = model("seller_customers", sellerCustomerSchema);

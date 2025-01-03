@@ -40,7 +40,7 @@ const sellerSchema = new Schema(
       default: {},
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 sellerSchema.index(

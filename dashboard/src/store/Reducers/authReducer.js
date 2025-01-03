@@ -72,6 +72,52 @@ export const get_user_info = createAsyncThunk(
     }
   }
 );
+export const profile_image_upload = createAsyncThunk(
+  "auth/profile_image_upload",
+  async (image, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.post("/profile-image-upload", image, {
+        withCredentials: true,
+      });
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const profile_info_add = createAsyncThunk(
+  "auth/profile_info_add",
+  async (info, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.post("/profile-info-add", info, {
+        withCredentials: true,
+      });
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async ({ navigate, role }, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.get("/logout", { withCredentials: true });
+      localStorage.removeItem("accessToken");
+      if (role === "admin") {
+        navigate("/admin/login");
+      } else {
+        navigate("/login");
+      }
+
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const authReducer = createSlice({
   name: "auth",
   initialState: {
@@ -130,16 +176,25 @@ export const authReducer = createSlice({
         state.loader = false;
         state.errorMessage = payload.error;
       })
-      .addCase(get_user_info.pending, (state) => {
-        state.loader = true;
-      })
       .addCase(get_user_info.fulfilled, (state, { payload }) => {
         state.loader = false;
-        state.userInfo = payload; // Update userInfo with fetched data
+        state.userInfo = payload.userInfo;
       })
-      .addCase(get_user_info.rejected, (state, { payload }) => {
+      .addCase(profile_image_upload.pending, (state) => {
+        state.loader = true;
+      })
+      .addCase(profile_image_upload.fulfilled, (state, { payload }) => {
         state.loader = false;
-        state.errorMessage = payload.error;
+        state.userInfo = payload.userInfo;
+        state.successMessage = payload.message;
+      })
+      .addCase(profile_info_add.pending, (state) => {
+        state.loader = true;
+      })
+      .addCase(profile_info_add.fulfilled, (state, { payload }) => {
+        state.loader = false;
+        state.userInfo = payload.userInfo;
+        state.successMessage = payload.message;
       });
   },
 });

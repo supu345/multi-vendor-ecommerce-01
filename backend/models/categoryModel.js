@@ -18,8 +18,11 @@ const categorySchema = new Schema(
   { timestamps: true }
 );
 
-categorySchema.index({
-  name: "text",
-}); //for search
+categorySchema.index(
+  {
+    name: "text",
+  },
+  { timestamps: true, versionKey: false }
+); //for search
 
 module.exports = model("categorys", categorySchema);
