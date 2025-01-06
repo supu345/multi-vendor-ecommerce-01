@@ -84,7 +84,7 @@ const Footer = () => {
                 className="h-full bg-transparent w-full px-3 outline-0"
                 type="text"
               />
-              <button className="h-full absolute right-0 bg-indigo-500 text-white uppercase px-4 font-bold text-sm">
+              <button className="h-full absolute right-0 bg-green-600 text-white uppercase px-4 font-bold text-sm">
                 Subscribe
               </button>
             </div>
@@ -127,9 +127,9 @@ const Footer = () => {
       </div>
       <div className="w-[85%] flex flex-wrap justify-center items-center text-slate-600 mx-auto py-5 text-center">
         <span>
-          Copiright ©2023 All rights reserved | mady by{" "}
+          Copiright ©2025 All rights reserved | mady by{" "}
           <a className="text-blue-500 underline" href="">
-            @Learn with Project
+            Suparna
           </a>
         </span>
       </div>

@@ -16,13 +16,46 @@ import {
   AiFillShopping,
 } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+//import { get_category } from "../store/reducers/homeReducer";
+import {
+  get_card_products,
+  get_wishlist_products,
+} from "../store/reducers/cardReducer";
 
 const Headers = () => {
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const { categorys } = useSelector((state) => state.home);
+  const { userInfo } = useSelector((state) => state.auth);
+  const { card_product_count, wishlist_count } = useSelector(
+    (state) => state.card
+  );
   const { pathname } = useLocation();
   const [showShidebar, setShowShidebar] = useState(true);
   const [categoryShow, setCategoryShow] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [category, setCategory] = useState("");
+
+  const search = () => {
+    navigate(`/products/search?category=${category}&&value=${searchValue}`);
+  };
+
+  const redirect_card_page = () => {
+    if (userInfo) {
+      navigate(`/card`);
+    } else {
+      navigate(`/login`);
+    }
+  };
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(get_card_products(userInfo.id));
+      dispatch(get_wishlist_products(userInfo.id));
+    }
+  }, [userInfo]);
   return (
     <div className="w-full bg-white">
       <div className="header-top bg-[#eeeeee] md-lg:hidden">
@@ -55,7 +88,7 @@ const Headers = () => {
                 </div>
                 <div className="flex group cursor-pointer text-slate-800 text-sm justify-center items-center gap-1 relative after:h-[18px] after:w-[1px] after:bg-[#afafaf] after:-right-[16px] after:absolute before:absolute before:h-[18px] before:bg-[#afafaf] before:w-[1px] before:-left-[20px]">
                   <img
-                    src="http://localhost:5174/images/language.png"
+                    src="http://localhost:5173/images/language.png"
                     alt="img"
                   />
                   <span>
@@ -66,15 +99,27 @@ const Headers = () => {
                     <li>English</li>
                   </ul>
                 </div>
-                <Link
-                  to="/login"
-                  className="flex cursor-pointer justify-center items-center gap-2 text-sm"
-                >
-                  <span>
-                    <FaLock />
-                  </span>
-                  <span>Login</span>
-                </Link>
+                {userInfo ? (
+                  <Link
+                    className="flex cursor-pointer justify-center items-center gap-2 text-sm"
+                    to="/dashboard"
+                  >
+                    <span>
+                      <FaUser />
+                    </span>
+                    <span>{userInfo.name}</span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="flex cursor-pointer justify-center items-center gap-2 text-sm"
+                  >
+                    <span>
+                      <FaLock />
+                    </span>
+                    <span>Login</span>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -107,6 +152,7 @@ const Headers = () => {
                 <ul className="flex justify-start items-start gap-8 text-sm font-bold uppercase md-lg:hidden">
                   <li>
                     <Link
+                      to="/"
                       className={`p-2 block ${
                         pathname === "/" ? "text-[#7fad39]" : "text-slate-600"
                       }`}
@@ -118,7 +164,7 @@ const Headers = () => {
                     <Link
                       to="/shops"
                       className={`p-2 block ${
-                        pathname === "/shop"
+                        pathname === "/shops"
                           ? "text-[#7fad39]"
                           : "text-slate-600"
                       }`}
@@ -128,6 +174,7 @@ const Headers = () => {
                   </li>
                   <li>
                     <Link
+                      to="/blog"
                       className={`p-2 block ${
                         pathname === "/blog"
                           ? "text-[#7fad39]"
@@ -139,6 +186,7 @@ const Headers = () => {
                   </li>
                   <li>
                     <Link
+                      to="/about"
                       className={`p-2 block ${
                         pathname === "/about"
                           ? "text-[#7fad39]"
@@ -150,6 +198,7 @@ const Headers = () => {
                   </li>
                   <li>
                     <Link
+                      to="/contact"
                       className={`p-2 block ${
                         pathname === "/contact"
                           ? "text-[#7fad39]"
@@ -163,30 +212,36 @@ const Headers = () => {
                 <div className="flex md-lg:hidden justify-center items-center gap-5">
                   <div className="flex justify-center gap-5">
                     <div
-                      //   onClick={() =>
-                      //     navigate(userInfo ? "/dashboard/my-wishlist" : "/login")
-                      //   }
+                      onClick={() =>
+                        navigate(userInfo ? "/dashboard/my-wishlist" : "/login")
+                      }
                       className="relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]"
                     >
                       <span className="text-xl text-red-500">
                         <AiFillHeart />
                       </span>
 
-                      <div className="w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[5px]">
-                        2
-                      </div>
+                      {wishlist_count !== 0 && (
+                        <div className="w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[5px]">
+                          {wishlist_count}
+                        </div>
+                      )}
                     </div>
                     <div
-                      // onClick={redirect_card_page}
+                      onClick={redirect_card_page}
                       className="relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]"
                     >
-                      <span className="text-xl text-orange-500">
-                        <AiFillShopping />
-                      </span>
+                      <Link to="/card">
+                        <span className="text-xl text-orange-500">
+                          <AiFillShopping />
+                        </span>
+                      </Link>
 
-                      <div className="w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[5px]">
-                        2
-                      </div>
+                      {card_product_count !== 0 && (
+                        <div className="w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[5px]">
+                          {card_product_count}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -352,14 +407,14 @@ const Headers = () => {
                   } overflow-hidden transition-all md-lg:relative duration-500 absolute z-[99999] bg-white w-full border-x`}
                 >
                   <ul className="py-2 text-slate-600 font-medium h-full overflow-auto">
-                    {[1, 2, 3, 4, 5].map((c, i) => {
+                    {categorys.map((c, i) => {
                       return (
                         <li
                           key={i}
                           className="flex justify-start items-center gap-2 px-[24px] py-[6px]"
                         >
                           <img
-                            src="https://images.pexels.com/photos/2613260/pexels-photo-2613260.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                            src={c.image}
                             className="w-[30px] h-[30px] rounded-full overflow-hidden"
                             alt={c.name}
                           />
@@ -367,7 +422,7 @@ const Headers = () => {
                             to={`/products?category=${c.name}`}
                             className="text-sm block"
                           >
-                            Food
+                            {c.name}
                           </Link>
                         </li>
                       );
@@ -388,23 +443,23 @@ const Headers = () => {
                         id=""
                       >
                         <option value="">Select category</option>
-                        {[1, 2, 3, 4].map((c, i) => (
+                        {categorys.map((c, i) => (
                           <option key={i} value={c.name}>
-                            Science
+                            {c.name}
                           </option>
                         ))}
                       </select>
                     </div>
                     <input
                       className="w-full relative bg-transparent text-slate-500 outline-0 px-3 h-full"
-                      //onChange={(e) => setSearchValue(e.target.value)}
+                      onChange={(e) => setSearchValue(e.target.value)}
                       type="text"
                       name=""
                       id=""
                       placeholder="what do you need"
                     />
                     <button
-                      // onClick={search}
+                      onClick={search}
                       className="bg-green-600 right-0 absolute px-8 h-full font-semibold uppercase text-white"
                     >
                       Search

@@ -2,26 +2,26 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Pagination from "../Pagination";
-//import { useDispatch, useSelector } from "react-redux";
-//import { get_active_sellers } from "../../store/Reducers/sellerReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { get_active_sellers } from "../../store/Reducers/sellerReducer";
 
 const Sellers = () => {
-  //const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [parPage, setParPage] = useState(5);
-  //const { sellers, totalSellers } = useSelector((state) => state.seller);
+  const { sellers, totalSellers } = useSelector((state) => state.seller);
   // const [show, setShow] = useState(false)
 
-  //   useEffect(() => {
-  //     const obj = {
-  //       parPage: parseInt(parPage),
-  //       page: parseInt(currentPage),
-  //       searchValue,
-  //     };
-  //     dispatch(get_active_sellers(obj));
-  //   }, [searchValue, currentPage, parPage]);
+  useEffect(() => {
+    const obj = {
+      parPage: parseInt(parPage),
+      page: parseInt(currentPage),
+      searchValue,
+    };
+    dispatch(get_active_sellers(obj));
+  }, [searchValue, currentPage, parPage]);
   return (
     <div className="px-2 lg:px-7 pt-5">
       <div className="w-full p-4  bg-[#283046] rounded-md">
@@ -76,7 +76,7 @@ const Sellers = () => {
               </tr>
             </thead>
             <tbody className="text-sm font-normal">
-              {[1, 2, 3].map((d, i) => (
+              {sellers.map((d, i) => (
                 <tr key={i}>
                   <td
                     scope="row"
@@ -90,45 +90,45 @@ const Sellers = () => {
                   >
                     <img
                       className="w-[45px] h-[45px]"
-                      src="https://images.pexels.com/photos/29656484/pexels-photo-29656484/free-photo-of-stylish-man-with-coffee-in-monochrome-portrait.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                      alt="img"
+                      src={`${d.image}`}
+                      alt=""
                     />
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>Fahim Rashid</span>
+                    <span>{d.name}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>Fahim Fashion</span>
+                    <span>{d.shopInfo?.shopName}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>pending</span>
+                    <span>{d.status}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>fahim@gmail.com</span>
+                    <span>{d.email}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>Dhaka</span>
+                    <span>{d.shopInfo?.division}</span>
                   </td>
                   <td
                     scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>Dhaka</span>
+                    <span>{d.shopInfo?.district}</span>
                   </td>
                   <td
                     scope="row"
@@ -136,7 +136,7 @@ const Sellers = () => {
                   >
                     <div className="flex justify-start items-center gap-4">
                       <Link
-                        to={`/admin/dashboard/seller/details/123`}
+                        to={`/admin/dashboard/seller/details/${d._id}`}
                         className="p-[6px] bg-green-500 rounded hover:shadow-lg hover:shadow-green-500/50"
                       >
                         <FaEye />
@@ -148,16 +148,19 @@ const Sellers = () => {
             </tbody>
           </table>
         </div>
-
-        <div className="w-full flex justify-end mt-4 bottom-4 right-4">
-          <Pagination
-            pageNumber={currentPage}
-            setPageNumber={setCurrentPage}
-            totalItem={20}
-            parPage={parPage}
-            showItem={4}
-          />
-        </div>
+        {totalSellers <= parPage ? (
+          <div className="w-full flex justify-end mt-4 bottom-4 right-4">
+            <Pagination
+              pageNumber={currentPage}
+              setPageNumber={setCurrentPage}
+              totalItem={totalSellers}
+              parPage={parPage}
+              showItem={4}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

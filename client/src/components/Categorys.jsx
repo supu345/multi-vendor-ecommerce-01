@@ -4,8 +4,8 @@ import "react-multi-carousel/lib/styles.css";
 import { Link } from "react-router-dom";
 //import { useSelector } from "react-redux";
 
-const Categorys = () => {
-  // const { categorys } = useSelector((state) => state.home);
+const Categorys = ({ categorys }) => {
+  //const { categorys } = useSelector((state) => state.home);
 
   const responsive = {
     superLargeDesktop: {
@@ -46,20 +46,17 @@ const Categorys = () => {
         responsive={responsive}
         transitionDuration={500}
       >
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((c, i) => (
+        {categorys.map((c, i) => (
           <Link
             className="h-[185px] border block"
             key={i}
             to={`/products?category=${c.name}`}
           >
             <div className="w-full h-full relative p-3">
-              <img
-                src="https://images.pexels.com/photos/51958/oranges-fruit-vitamins-healthy-eating-51958.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="image"
-              />
+              <img src={c.image} alt="image" />
               <div className="absolute bottom-6 w-full mx-auto font-bold left-0 flex justify-center items-center">
                 <span className="py-[2px] px-6 bg-[#3330305d] text-white">
-                  Food
+                  {c.name}
                 </span>
               </div>
             </div>

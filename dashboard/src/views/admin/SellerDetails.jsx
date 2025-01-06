@@ -1,123 +1,138 @@
 import React, { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import Pagination from "../Pagination";
-//import { useSelector, useDispatch } from "react-redux";
-import Search from "../components/Search";
-//import { get_seller_request } from "../../store/Reducers/sellerReducer";
-const SellerRequest = () => {
-  //const dispatch = useDispatch();
-  //const { sellers, totalSeller } = useSelector((state) => state.seller);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchValue, setSearchValue] = useState("");
-  const [parPage, setParPage] = useState(5);
-  const [show, setShow] = useState(false);
-
-  // useEffect(() => {
-  //   dispatch(
-  //     get_seller_request({
-  //       parPage,
-  //       searchValue,
-  //       page: currentPage,
-  //     })
-  //   );
-  // }, [parPage, searchValue, currentPage]);
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  get_seller,
+  seller_status_update,
+  messageClear,
+} from "../../store/Reducers/sellerReducer";
+const SellerDetails = () => {
+  const dispatch = useDispatch();
+  const { seller, successMessage } = useSelector((state) => state.seller);
+  const { sellerId } = useParams();
+  useEffect(() => {
+    dispatch(get_seller(sellerId));
+  }, [sellerId]);
+  const [status, setStatus] = useState("");
+  const submit = (e) => {
+    e.preventDefault();
+    dispatch(
+      seller_status_update({
+        sellerId,
+        status,
+      })
+    );
+  };
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage]);
+  useEffect(() => {
+    if (seller) {
+      setStatus(seller.status);
+    }
+  }, [seller]);
   return (
-    <div className="px-2 lg:px-7 pt-5">
-      <div className="w-full p-4  bg-[#283046] rounded-md">
-        <Search
-          setParPage={setParPage}
-          setSearchValue={setSearchValue}
-          searchValue={searchValue}
-        />
-        <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left text-[#d0d2d6]">
-            <thead className="text-xs text-[#d0d2d6] uppercase border-b border-slate-700">
-              <tr>
-                <th scope="col" className="py-3 px-4">
-                  No
-                </th>
-                <th scope="col" className="py-3 px-4">
-                  Name
-                </th>
-                <th scope="col" className="py-3 px-4">
-                  Email
-                </th>
-                <th scope="col" className="py-3 px-4">
-                  Payment Status
-                </th>
-                <th scope="col" className="py-3 px-4">
-                  Status
-                </th>
-                <th scope="col" className="py-3 px-4">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm font-normal">
-              {[1, 2, 3.4].map((d, i) => (
-                <tr className="border-b border-slate-700" key={i}>
-                  <td
-                    scope="row"
-                    className="py-2 px-4 font-normal whitespace-nowrap"
-                  >
-                    {i + 1}
-                  </td>
-                  <td
-                    scope="row"
-                    className="py-2 px-4 font-normal whitespace-nowrap"
-                  >
-                    <span>Fahim Rashid</span>
-                  </td>
-                  <td
-                    scope="row"
-                    className="py-2 px-4 font-normal whitespace-nowrap"
-                  >
-                    <span>fahim@email.com</span>
-                  </td>
-                  <td
-                    scope="row"
-                    className="py-2 px-4 font-normal whitespace-nowrap"
-                  >
-                    <span>payment</span>
-                  </td>
-                  <td
-                    scope="row"
-                    className="py-2 px-4 font-normal whitespace-nowrap"
-                  >
-                    <span>pending</span>
-                  </td>
-                  <td
-                    scope="row"
-                    className="py-2 px-4 font-normal whitespace-nowrap"
-                  >
-                    <div className="flex justify-start items-center gap-4">
-                      <Link
-                        to={`/admin/dashboard/seller/details/123`}
-                        className="p-[6px] bg-green-500 rounded hover:shadow-lg hover:shadow-green-500/50"
-                      >
-                        <FaEye />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="w-full flex justify-end mt-4 bottom-4 right-4">
-          <Pagination
-            pageNumber={currentPage}
-            setPageNumber={setCurrentPage}
-            totalItem={50}
-            parPage={parPage}
-            showItem={4}
-          />
+    <div>
+      <div className="px-2 lg:px-7 pt-5">
+        <div className="w-full p-4  bg-[#283046] rounded-md">
+          <div className="w-full flex flex-wrap text-[#d0d2d6]">
+            <div className="w-3/12 flex justify-center items-center py-3">
+              <div>
+                {seller?.image ? (
+                  <img
+                    className="w-full h-[230px]"
+                    src={seller?.image}
+                    alt=""
+                  />
+                ) : (
+                  <span>Image not uploaded</span>
+                )}
+              </div>
+            </div>
+            <div className="w-4/12">
+              <div className="px-0 md:px-5 py-2">
+                <div className="py-2 text-lg">
+                  <h2>Basic Info</h2>
+                </div>
+                <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-slate-800 rounded-md">
+                  <div className="flex gap-2">
+                    <span>Name : </span>
+                    <span>{seller?.name}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>Email : </span>
+                    <span>{seller?.email}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>Role : </span>
+                    <span>{seller?.role}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>Status : </span>
+                    <span>{seller?.status}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>Payment Account : </span>
+                    <span>{seller?.payment}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="w-4/12">
+              <div className="px-0 md:px-5 py-2">
+                <div className="py-2 text-lg">
+                  <h2>Address</h2>
+                </div>
+                <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-slate-800 rounded-md">
+                  <div className="flex gap-2">
+                    <span>Shop Name : </span>
+                    <span>{seller?.shopInfo?.shopName}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>Division : </span>
+                    <span>{seller?.shopInfo?.division}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>District : </span>
+                    <span>{seller?.shopInfo?.district}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span>Sub-District : </span>
+                    <span>{seller?.shopInfo?.sub_district}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <form onSubmit={submit}>
+              <div className="flex gap-4 py-3">
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#283046] border border-slate-700 rounded-md text-[#d0d2d6]"
+                  name=""
+                  required
+                  id=""
+                >
+                  <option value="">--select status--</option>
+                  <option value="active">Active</option>
+                  <option value="deactive">Deactive</option>
+                </select>
+                <button className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-white rounded-md px-7 py-2 w-[170px] ">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default SellerRequest;
+export default SellerDetails;

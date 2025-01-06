@@ -4,12 +4,7 @@ import "react-multi-carousel/lib/styles.css";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-const Products = ({ title }) => {
-  const products = [
-    [1, 2, 3],
-    [4, 5, 6],
-  ];
-
+const Products = ({ title, products }) => {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -28,6 +23,7 @@ const Products = ({ title }) => {
       items: 1,
     },
   };
+
   const ButtonGroup = ({ next, previous }) => {
     return (
       <div className="flex justify-between items-center">
@@ -46,13 +42,21 @@ const Products = ({ title }) => {
             className="w-[30px] h-[30px] flex justify-center items-center bg-slate-300 border border-slate-200"
           >
             <span>
-              <FiChevronLeft />
+              <FiChevronRight />
             </span>
           </button>
         </div>
       </div>
     );
   };
+
+  // Check if products are defined and not empty
+  if (!products || products.length === 0) {
+    return (
+      <div className="text-center text-gray-500">No products available</div>
+    );
+  }
+
   return (
     <div className="flex gap-8 flex-col-reverse">
       <Carousel
@@ -64,33 +68,26 @@ const Products = ({ title }) => {
         renderButtonGroupOutside={true}
         customButtonGroup={<ButtonGroup />}
       >
-        {products.map((p, i) => {
-          return (
-            <div key={i} className="flex flex-col justify-start gap-2">
-              {p.map((pl, j) => (
-                <Link key={j} className="flex justify-start items-start" to="#">
-                  <img
-                    className="w-[80px] h-[80px]"
-                    src="https://images.pexels.com/photos/2820144/pexels-photo-2820144.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                    alt="images"
-                  />
-                  <div className="px-3 flex justify-start items-start gap-1 flex-col text-slate-600">
-                    <h2 className="text-[13px]">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Quo, laboriosam.
-                    </h2>
-                    <span className="text-md font-bold">$200</span>
-                    <p className="text-[13px]">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Quas porro repellat provident praesentium ipsa odit
-                      aperiam ut fugiat soluta sint.
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          );
-        })}
+        {products.map((p, i) => (
+          <div key={i} className="flex flex-col justify-start gap-2">
+            {p.map((pl, j) => (
+              <Link key={j} className="flex justify-start items-start" to="#">
+                <img
+                  className="w-[80px] h-[80px]"
+                  src={pl.images[0]}
+                  alt="images"
+                />
+                <div className="px-3 flex justify-start items-start gap-1 flex-col text-slate-600">
+                  <h2 className="text-[13px]">{pl.name?.slice(0, 40)}</h2>
+                  <span className="text-md font-bold">${pl.price}</span>
+                  <p className="text-[13px]">
+                    {pl.description?.slice(0, 50)}...
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ))}
       </Carousel>
     </div>
   );
