@@ -22,6 +22,7 @@ import Wishlist from "./components/dashboard/Wishlist";
 import Order from "./components/dashboard/Order";
 import ChangePassword from "./components/dashboard/ChangePassword";
 import Index from "./components/dashboard/Index";
+import Payment from "./pages/Payment";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/card" element={<Card />} />
         <Route path="/shipping" element={<Shipping />} />
+        <Route path="/payment" element={<Payment />} />
         <Route path="/dashboard" element={<ProtectUser />}>
           <Route path="" element={<Dashboard />}>
             <Route path="" element={<Index />} />

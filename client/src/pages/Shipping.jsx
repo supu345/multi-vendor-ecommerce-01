@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-//import { place_order } from "../store/reducers/orderReducer";
+import { place_order } from "../store/reducers/orderReducer";
 
 const Shipping = () => {
   const navigate = useNavigate();
@@ -36,19 +36,19 @@ const Shipping = () => {
       setRes(true);
     }
   };
-  //   const placeOrder = () => {
-  //     dispatch(
-  //       place_order({
-  //         price,
-  //         products,
-  //         shipping_fee,
-  //         shippingInfo: state,
-  //         userId: userInfo.id,
-  //         navigate,
-  //         items,
-  //       })
-  //     );
-  //   };
+  const placeOrder = () => {
+    dispatch(
+      place_order({
+        price,
+        products,
+        shipping_fee,
+        shippingInfo: state,
+        userId: userInfo.id,
+        navigate,
+        items,
+      })
+    );
+  };
   return (
     <div>
       <Headers />
@@ -202,7 +202,7 @@ const Shipping = () => {
                         </span>
                       </p>
                       <p className="text-slate-600 text-sm">
-                        Email to sheikhfarid@gmail.com
+                        Email to adilah@gmail.com
                       </p>
                     </div>
                   )}
@@ -273,7 +273,7 @@ const Shipping = () => {
                     <span>${price + shipping_fee}</span>
                   </div>
                   <button
-                    //onClick={placeOrder}
+                    onClick={placeOrder}
                     disabled={res ? false : true}
                     className={`px-5 py-[6px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg ${
                       res ? "bg-orange-500" : "bg-orange-300"
